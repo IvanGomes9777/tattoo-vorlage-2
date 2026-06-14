@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Sektion 03 — Portfolio-Galerie (Konzept A + editoriale Lightbox aus E).
@@ -145,7 +148,9 @@ const WORKS: Work[] = [
 ];
 
 export default function Portfolio() {
+  const rootRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const firstRun = useRef(true);
   const [style, setStyle] = useState<string>("Alle");
   const [artist, setArtist] = useState<string>("Alle");
   const [active, setActive] = useState<Work | null>(null);
@@ -160,8 +165,41 @@ export default function Portfolio() {
     [style, artist]
   );
 
-  // Weicher Fade-Up bei Mount UND bei jedem Filterwechsel (kein FLIP/absolute)
+  // Scroll-Reveal beim Eintreten der Sektion (Header + Bilder gestaffelt)
   useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".portfolio-head", {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: { trigger: rootRef.current, start: "top 78%" },
+      });
+      gsap.from(".work-tile", {
+        opacity: 0,
+        y: 50,
+        scale: 0.96,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: { each: 0.08, from: "start" },
+        scrollTrigger: { trigger: gridRef.current, start: "top 82%" },
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Filterwechsel: weicher Fade-Up (nicht beim ersten Render -> sonst Konflikt mit Reveal)
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
     if (!gridRef.current) return;
     const tiles = gridRef.current.querySelectorAll(".work-tile");
     const prefersReduced = window.matchMedia(
@@ -199,11 +237,12 @@ export default function Portfolio() {
   return (
     <section
       id="portfolio"
+      ref={rootRef}
       className="relative scroll-mt-24 bg-ink-black px-6 py-24 lg:px-16 lg:py-32"
     >
       <div className="mx-auto max-w-[1280px]">
         {/* Header */}
-        <div className="mb-12">
+        <div className="portfolio-head mb-12">
           <p className="font-mono text-[11px] uppercase tracking-[0.34em] text-ink-neon">
             03 — Das Archiv
           </p>
