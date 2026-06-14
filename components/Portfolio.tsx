@@ -2,24 +2,24 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { Flip } from "gsap/Flip";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(Flip, ScrollTrigger);
 
 /**
  * Sektion 03 — Portfolio-Galerie (Konzept A + editoriale Lightbox aus E).
  *
- * Masonry-Wand, Filter nach Stil & Künstler mit GSAP-FLIP-Reflow,
- * Clip-Reveal beim Scroll, Lightbox mit Werk-Detail & "Ähnliches anfragen"-CTA.
+ * Masonry-Wand (CSS-Columns), Filter nach Stil & Künstler mit weichem
+ * Fade-Up-Reflow, Lightbox mit Werk-Detail & "Ähnliches anfragen"-CTA.
  *
- * TODO (echte Daten): /public/works/* gegen echte Studio-Fotos tauschen.
+ * Robust: feste aspect-ratio pro Kachel (kein Layout-Shift beim Laden),
+ * keine FLIP-absolute-Tricks (die brechen im Column-Layout die Positionen).
+ *
+ * TODO (echte Daten): /public/works/* + Web-Platzhalter gegen echte Fotos tauschen.
  */
 type Artist = "Marco" | "Lena";
 
 type Work = {
   id: string;
   src: string;
+  aspect: string; // reserviert Platz -> verhindert Springen beim Laden
   style: string;
   artist: Artist;
   title: string;
@@ -45,6 +45,7 @@ const WORKS: Work[] = [
   {
     id: "w1",
     src: "/artists/marco-work.png",
+    aspect: "4 / 5",
     style: "Blackwork",
     artist: "Marco",
     title: "Geometrischer Unterarm",
@@ -54,6 +55,7 @@ const WORKS: Work[] = [
   {
     id: "w2",
     src: "/works/marco-dotwork-mandala.png",
+    aspect: "3 / 4",
     style: "Dotwork",
     artist: "Marco",
     title: "Dotwork-Mandala",
@@ -63,6 +65,7 @@ const WORKS: Work[] = [
   {
     id: "w3",
     src: U("1611501275019-9b5cda994e8d", 900),
+    aspect: "1 / 1",
     style: "Geometric",
     artist: "Marco",
     title: "Sacred Geometry",
@@ -72,6 +75,7 @@ const WORKS: Work[] = [
   {
     id: "w4",
     src: "/works/marco-ornamental.png",
+    aspect: "4 / 5",
     style: "Blackwork",
     artist: "Marco",
     title: "Ornamental Black",
@@ -81,6 +85,7 @@ const WORKS: Work[] = [
   {
     id: "w5",
     src: "/works/marco-dotwork-wolf.png",
+    aspect: "3 / 4",
     style: "Dotwork",
     artist: "Marco",
     title: "Wolf — Dotwork",
@@ -90,6 +95,7 @@ const WORKS: Work[] = [
   {
     id: "w6",
     src: "/artists/lena-work.png",
+    aspect: "4 / 5",
     style: "Fine-Line",
     artist: "Lena",
     title: "Botanische Linie",
@@ -99,6 +105,7 @@ const WORKS: Work[] = [
   {
     id: "w7",
     src: U("1581299894007-aaa50297cf16", 900),
+    aspect: "4 / 5",
     style: "Fine-Line",
     artist: "Lena",
     title: "Minimal-Symbol",
@@ -108,6 +115,7 @@ const WORKS: Work[] = [
   {
     id: "w8",
     src: U("1604881988758-f76ad2f7aac1", 900),
+    aspect: "3 / 4",
     style: "Realism",
     artist: "Lena",
     title: "Rose — Realism",
@@ -117,6 +125,7 @@ const WORKS: Work[] = [
   {
     id: "w9",
     src: U("1612459284970-e8f027596582", 900),
+    aspect: "1 / 1",
     style: "Fine-Line",
     artist: "Lena",
     title: "Script Lettering",
@@ -126,6 +135,7 @@ const WORKS: Work[] = [
   {
     id: "w10",
     src: U("1559599101-f09722fb4948", 900),
+    aspect: "1 / 1",
     style: "Realism",
     artist: "Lena",
     title: "Auge — Hyperrealism",
@@ -135,7 +145,6 @@ const WORKS: Work[] = [
 ];
 
 export default function Portfolio() {
-  const rootRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<string>("Alle");
   const [artist, setArtist] = useState<string>("Alle");
@@ -151,50 +160,30 @@ export default function Portfolio() {
     [style, artist]
   );
 
-  // FLIP-Reflow beim Filterwechsel
+  // Weicher Fade-Up bei Mount UND bei jedem Filterwechsel (kein FLIP/absolute)
   useEffect(() => {
     if (!gridRef.current) return;
+    const tiles = gridRef.current.querySelectorAll(".work-tile");
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (prefersReduced) return;
-
-    const state = Flip.getState(gridRef.current.querySelectorAll(".work-tile"));
-    Flip.from(state, {
-      duration: 0.55,
-      ease: "power2.inOut",
-      scale: true,
-      absolute: true,
-      stagger: 0.03,
-      onEnter: (els) =>
-        gsap.fromTo(
-          els,
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 0.4 }
-        ),
-      onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.85, duration: 0.3 }),
-    });
+    if (prefersReduced) {
+      gsap.set(tiles, { opacity: 1, y: 0 });
+      return;
+    }
+    gsap.fromTo(
+      tiles,
+      { opacity: 0, y: 24 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        stagger: 0.05,
+        overwrite: true,
+      }
+    );
   }, [visible]);
-
-  // Clip-Reveal beim Scroll (initial)
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(".work-tile", {
-        opacity: 0,
-        y: 40,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.06,
-        scrollTrigger: { trigger: gridRef.current, start: "top 80%" },
-      });
-    }, rootRef);
-    return () => ctx.revert();
-  }, []);
 
   // ESC schließt Lightbox + Body-Scroll-Lock
   useEffect(() => {
@@ -210,7 +199,6 @@ export default function Portfolio() {
   return (
     <section
       id="portfolio"
-      ref={rootRef}
       className="relative scroll-mt-24 bg-ink-black px-6 py-24 lg:px-16 lg:py-32"
     >
       <div className="mx-auto max-w-[1280px]">
@@ -247,23 +235,23 @@ export default function Portfolio() {
           />
         </div>
 
-        {/* Masonry-Grid */}
+        {/* Masonry-Grid (CSS-Columns) */}
         <div
           ref={gridRef}
-          className="[column-fill:_balance] gap-4 [column-count:1] sm:[column-count:2] lg:[column-count:3]"
+          className="gap-4 [column-count:1] [column-fill:_balance] sm:[column-count:2] lg:[column-count:3]"
         >
           {visible.map((w) => (
             <button
               key={w.id}
-              data-flip-id={w.id}
               onClick={() => setActive(w)}
+              style={{ aspectRatio: w.aspect }}
               className="work-tile group relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-[3px] bg-ink-coal text-left"
             >
               <img
                 src={w.src}
                 alt={`${w.title} — ${w.style} von ${w.artist}`}
                 loading="lazy"
-                className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
               />
               {/* Hover-Overlay */}
               <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink-black/90 via-ink-black/10 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
