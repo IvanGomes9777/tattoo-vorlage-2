@@ -25,7 +25,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-ink-black px-6 pt-20 lg:px-16">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-ink-black px-6 pt-14 lg:px-16 lg:pt-20">
       <div className="mx-auto max-w-[1280px]">
         <div className="grid gap-12 pb-16 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -126,10 +126,10 @@ export default function Footer() {
         {/* Große Wortmarke als Abschluss */}
         <div
           aria-hidden
-          className="pointer-events-none select-none pb-2 pt-4 text-center font-display leading-none text-transparent"
+          className="pointer-events-none select-none overflow-hidden whitespace-nowrap pb-1 text-center font-display leading-[0.85] text-transparent"
           style={{
-            fontSize: "clamp(3.5rem, 18vw, 16rem)",
-            WebkitTextStroke: "1px rgba(245,240,232,0.06)",
+            fontSize: "clamp(2.25rem, 15vw, 14rem)",
+            WebkitTextStroke: "1px rgba(245,240,232,0.09)",
           }}
         >
           INK &amp; SOUL
