@@ -58,11 +58,22 @@ export default function FAQ() {
         duration: 0.6,
         ease: "power3.out",
         stagger: 0.08,
-        scrollTrigger: { trigger: ".faq-list", start: "top 82%" },
+        scrollTrigger: { trigger: ".faq-list", start: "top 88%", once: true },
       });
     }, rootRef);
 
-    return () => ctx.revert();
+    // Positionen neu berechnen, sobald Fonts/Layout final sind (sonst bleibt
+    // der Trigger "stale" und die Reihen unsichtbar)
+    const refresh = () => ScrollTrigger.refresh();
+    if (document.fonts?.ready) document.fonts.ready.then(refresh);
+    window.addEventListener("load", refresh);
+    const t = window.setTimeout(refresh, 600);
+
+    return () => {
+      window.removeEventListener("load", refresh);
+      window.clearTimeout(t);
+      ctx.revert();
+    };
   }, []);
 
   return (
