@@ -171,11 +171,11 @@ export default function Stimmen() {
     <section
       id="stimmen"
       ref={rootRef}
-      className="relative scroll-mt-24 bg-ink-black px-6 py-24 lg:px-16 lg:py-32"
+      className="relative flex min-h-screen scroll-mt-24 flex-col justify-center bg-ink-black px-6 py-24 lg:px-16"
     >
-      <div className="mx-auto max-w-[1280px]">
-        {/* Header + Rating-Übersicht */}
-        <div className="mb-12 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mx-auto w-full max-w-[1280px]">
+        {/* Header + Rating-Übersicht (zentriert) */}
+        <div className="mb-12 flex flex-col items-center gap-6 text-center">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.34em] text-ink-neon">
               06 — Stimmen
@@ -186,7 +186,7 @@ export default function Stimmen() {
           </div>
 
           {/* Rating-Box */}
-          <div className="flex items-center gap-4 rounded-[4px] border border-white/10 bg-ink-coal px-6 py-4">
+          <div className="inline-flex items-center gap-4 rounded-[4px] border border-white/10 bg-ink-coal px-6 py-4 text-left">
             <GoogleG className="h-9 w-9 shrink-0" />
             <div>
               <div className="flex items-center gap-2">
