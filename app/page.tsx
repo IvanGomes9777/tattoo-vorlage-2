@@ -5,6 +5,7 @@ import Portfolio from "@/components/Portfolio";
 import Ablauf from "@/components/Ablauf";
 import Hygiene from "@/components/Hygiene";
 import Stimmen from "@/components/Stimmen";
+import FAQ from "@/components/FAQ";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Ablauf />
       <Hygiene />
       <Stimmen />
+      <FAQ />
     </main>
   );
 }
