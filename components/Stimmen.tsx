@@ -114,8 +114,36 @@ function Stars({ value = 5 }: { value?: number }) {
   );
 }
 
+function ReviewCard({ r }: { r: Review }) {
+  return (
+    <article className="flex w-[320px] shrink-0 flex-col rounded-[6px] border border-white/10 bg-ink-coal p-6">
+      <div className="flex items-center gap-3">
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-semibold text-white"
+          style={{ backgroundColor: r.color }}
+        >
+          {r.initial}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-ink-bone">
+            {r.name}
+          </p>
+          <p className="text-[12px] text-ink-mute">{r.when}</p>
+        </div>
+        <GoogleG className="h-5 w-5 shrink-0" />
+      </div>
+      <div className="mt-3">
+        <Stars value={5} />
+      </div>
+      <p className="mt-3 text-[14px] leading-relaxed text-ink-ash">{r.text}</p>
+    </article>
+  );
+}
+
 export default function Stimmen() {
   const rootRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     const prefersReduced = window.matchMedia(
@@ -124,13 +152,15 @@ export default function Stimmen() {
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      gsap.from(".review-card", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power3.out",
-        stagger: 0.08,
-        scrollTrigger: { trigger: ".reviews-grid", start: "top 82%" },
+      const track = trackRef.current;
+      if (!track) return;
+      // Track enthält die Liste 2× -> halbe Breite ist eine volle Runde (nahtlos)
+      const loopWidth = track.scrollWidth / 2;
+      tweenRef.current = gsap.to(track, {
+        x: -loopWidth,
+        duration: loopWidth / 55, // ~55 px/s
+        ease: "none",
+        repeat: -1,
       });
     }, rootRef);
 
@@ -172,36 +202,21 @@ export default function Stimmen() {
           </div>
         </div>
 
-        {/* Bewertungskarten */}
-        <div className="reviews-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {REVIEWS.map((r) => (
-            <article
-              key={r.name}
-              className="review-card flex flex-col rounded-[6px] border border-white/10 bg-ink-coal p-6"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-semibold text-white"
-                  style={{ backgroundColor: r.color }}
-                >
-                  {r.initial}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-ink-bone">
-                    {r.name}
-                  </p>
-                  <p className="text-[12px] text-ink-mute">{r.when}</p>
-                </div>
-                <GoogleG className="h-5 w-5 shrink-0" />
-              </div>
-              <div className="mt-3">
-                <Stars value={5} />
-              </div>
-              <p className="mt-3 text-[14px] leading-relaxed text-ink-ash">
-                {r.text}
-              </p>
-            </article>
-          ))}
+        {/* Endlos-Karussell */}
+        <div
+          className="relative overflow-hidden motion-reduce:overflow-x-auto"
+          onMouseEnter={() => tweenRef.current?.pause()}
+          onMouseLeave={() => tweenRef.current?.resume()}
+        >
+          {/* Rand-Verläufe */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-ink-black to-transparent sm:w-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-ink-black to-transparent sm:w-20" />
+
+          <div ref={trackRef} className="flex w-max gap-5">
+            {[...REVIEWS, ...REVIEWS].map((r, i) => (
+              <ReviewCard key={`${r.name}-${i}`} r={r} />
+            ))}
+          </div>
         </div>
 
         {/* CTAs */}
