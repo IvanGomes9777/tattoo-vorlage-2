@@ -27,7 +27,7 @@ const STEPS: Step[] = [
     n: "01",
     title: "Anfrage",
     desc: "Schick uns deine Idee, Referenzbilder & Wunsch-Körperstelle über das Formular.",
-    x: 35,
+    x: 40,
     y: 7.6,
     side: "left",
   },
@@ -35,7 +35,7 @@ const STEPS: Step[] = [
     n: "02",
     title: "Beratung",
     desc: "Kostenloses Beratungsgespräch — vor Ort oder per Video. Wir besprechen Design, Größe, Platzierung & Preis.",
-    x: 65,
+    x: 60,
     y: 24.7,
     side: "right",
   },
@@ -43,7 +43,7 @@ const STEPS: Step[] = [
     n: "03",
     title: "Design",
     desc: "Dein Künstler erstellt ein individuelles Design. Anpassungen inklusive, bis du 100 % zufrieden bist.",
-    x: 35,
+    x: 40,
     y: 41.8,
     side: "left",
   },
@@ -51,7 +51,7 @@ const STEPS: Step[] = [
     n: "04",
     title: "Termin & Anzahlung",
     desc: "Wir buchen deinen Termin. Eine Anzahlung von 50 € sichert den Slot — sie wird mit dem Endpreis verrechnet.",
-    x: 65,
+    x: 60,
     y: 58.8,
     side: "right",
   },
@@ -59,7 +59,7 @@ const STEPS: Step[] = [
     n: "05",
     title: "Dein Tag",
     desc: "Entspannt ankommen, Kunst empfangen. Wir nehmen uns die Zeit, die dein Tattoo verdient.",
-    x: 35,
+    x: 40,
     y: 75.9,
     side: "left",
   },
@@ -67,14 +67,14 @@ const STEPS: Step[] = [
     n: "06",
     title: "Aftercare",
     desc: "Du bekommst eine ausführliche Pflege-Anleitung & wir stehen dir bei allen Fragen zur Seite.",
-    x: 65,
+    x: 60,
     y: 93.5,
     side: "right",
   },
 ];
 
 const PATH_D =
-  "M350 130 C350 270,650 280,650 420 C650 560,350 570,350 710 C350 850,650 860,650 1000 C650 1140,350 1150,350 1290 C350 1430,650 1440,650 1590";
+  "M400 130 C400 270,600 280,600 420 C600 560,400 570,400 710 C400 850,600 860,600 1000 C600 1140,400 1150,400 1290 C400 1430,600 1440,600 1590";
 
 export default function Ablauf() {
   const rootRef = useRef<HTMLElement>(null);
@@ -198,8 +198,10 @@ export default function Ablauf() {
 
               {/* Karte seitlich */}
               <div
-                className={`ablauf-reveal absolute top-0 w-[32%] -translate-y-1/2 ${
-                  s.side === "left" ? "left-0 text-right" : "right-0 text-left"
+                className={`ablauf-reveal absolute top-0 w-[33%] -translate-y-1/2 ${
+                  s.side === "left"
+                    ? "left-0 pr-12 text-right"
+                    : "right-0 pl-12 text-left"
                 }`}
                 style={{ top: `${s.y}%` }}
               >
