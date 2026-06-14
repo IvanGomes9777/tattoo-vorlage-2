@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
   { label: "Künstler", href: "#kuenstler" },
-  { label: "Stile", href: "#stile" },
   { label: "Portfolio", href: "#portfolio" },
+  { label: "Ablauf", href: "#ablauf" },
   { label: "Stimmen", href: "#stimmen" },
   { label: "FAQ", href: "#faq" },
+  { label: "Kontakt", href: "#termin" },
 ];
 
 export default function Navbar() {
