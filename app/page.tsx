@@ -7,6 +7,7 @@ import Hygiene from "@/components/Hygiene";
 import Stimmen from "@/components/Stimmen";
 import FAQ from "@/components/FAQ";
 import Kontakt from "@/components/Kontakt";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Stimmen />
       <FAQ />
       <Kontakt />
+      <Footer />
     </main>
   );
 }
