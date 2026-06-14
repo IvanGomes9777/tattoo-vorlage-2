@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import { useState } from "react";
 
 /**
  * Sektion 08 — Kontakt & Booking.
@@ -27,37 +26,7 @@ const inputCls =
   "w-full rounded-[3px] border border-white/15 bg-ink-coal px-4 py-3 text-[14px] text-ink-bone placeholder:text-ink-mute outline-none transition-colors focus:border-ink-neon";
 
 export default function Kontakt() {
-  const rootRef = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) return;
-
-    const reveal = rootRef.current?.querySelectorAll(".kontakt-col");
-    if (!reveal) return;
-    const io = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            gsap.from(reveal, {
-              opacity: 0,
-              y: 36,
-              duration: 0.7,
-              ease: "power3.out",
-              stagger: 0.12,
-            });
-            obs.disconnect();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    io.observe(rootRef.current as Element);
-    return () => io.disconnect();
-  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,7 +58,6 @@ export default function Kontakt() {
   return (
     <section
       id="termin"
-      ref={rootRef}
       className="relative scroll-mt-24 bg-ink-black px-6 py-24 lg:px-16 lg:py-32"
     >
       <div className="mx-auto max-w-[1280px]">
