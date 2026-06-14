@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Sektion 07 — FAQ (Konzept C: Big-Index Accordion).
@@ -51,29 +48,31 @@ export default function FAQ() {
     ).matches;
     if (prefersReduced) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from(".faq-row", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power3.out",
-        stagger: 0.08,
-        scrollTrigger: { trigger: ".faq-list", start: "top 88%", once: true },
-      });
-    }, rootRef);
+    const list = rootRef.current?.querySelector(".faq-list");
+    if (!list) return;
 
-    // Positionen neu berechnen, sobald Fonts/Layout final sind (sonst bleibt
-    // der Trigger "stale" und die Reihen unsichtbar)
-    const refresh = () => ScrollTrigger.refresh();
-    if (document.fonts?.ready) document.fonts.ready.then(refresh);
-    window.addEventListener("load", refresh);
-    const t = window.setTimeout(refresh, 600);
+    // Reihen sind per Default sichtbar -> Reveal nur als Zusatz beim Eintreten.
+    const rows = gsap.utils.toArray<HTMLElement>(".faq-row");
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            gsap.from(rows, {
+              opacity: 0,
+              y: 30,
+              duration: 0.6,
+              ease: "power3.out",
+              stagger: 0.08,
+            });
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    io.observe(list);
 
-    return () => {
-      window.removeEventListener("load", refresh);
-      window.clearTimeout(t);
-      ctx.revert();
-    };
+    return () => io.disconnect();
   }, []);
 
   return (
