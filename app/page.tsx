@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Kuenstler from "@/components/Kuenstler";
 import Portfolio from "@/components/Portfolio";
 import Ablauf from "@/components/Ablauf";
+import Hygiene from "@/components/Hygiene";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Kuenstler />
       <Portfolio />
       <Ablauf />
+      <Hygiene />
     </main>
   );
 }
