@@ -141,7 +141,7 @@ export default function Hero() {
           Realism & Japanese — kompromisslos auf deine Idee zugeschnitten.
         </p>
 
-        <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
+        <div className="mt-9 flex flex-col items-center gap-7 sm:flex-row sm:gap-8">
           <a
             href="#termin"
             className="hero-cta animate-ctaPulse rounded-[2px] bg-ink-neon px-8 py-4 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-ink-black transition-transform duration-200 hover:-translate-y-0.5"
@@ -150,7 +150,7 @@ export default function Hero() {
           </a>
           <a
             href="#portfolio"
-            className="hero-cta text-[12.5px] uppercase tracking-[0.14em] text-ink-bone underline-offset-[6px] transition-colors duration-200 hover:text-ink-neon hover:underline"
+            className="hero-cta px-4 py-3 text-[12.5px] uppercase tracking-[0.14em] text-ink-bone underline-offset-[6px] transition-colors duration-200 hover:text-ink-neon hover:underline"
           >
             Portfolio ansehen ↓
           </a>
