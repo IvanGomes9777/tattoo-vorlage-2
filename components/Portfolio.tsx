@@ -274,17 +274,16 @@ export default function Portfolio() {
           />
         </div>
 
-        {/* Masonry-Grid (CSS-Columns) */}
+        {/* Thumbnail-Raster: 3 pro Reihe (Mobile) -> 4 (Desktop), Tap -> Lightbox */}
         <div
           ref={gridRef}
-          className="gap-4 [column-count:1] [column-fill:_balance] sm:[column-count:2] lg:[column-count:3]"
+          className="grid grid-cols-3 gap-1.5 sm:gap-3 lg:grid-cols-4 lg:gap-4"
         >
           {visible.map((w) => (
             <button
               key={w.id}
               onClick={() => setActive(w)}
-              style={{ aspectRatio: w.aspect }}
-              className="work-tile group relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-[3px] bg-ink-coal text-left"
+              className="work-tile group relative aspect-square overflow-hidden rounded-[3px] bg-ink-coal text-left"
             >
               <img
                 src={w.src}
@@ -292,8 +291,8 @@ export default function Portfolio() {
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
               />
-              {/* Hover-Overlay */}
-              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-ink-black/90 via-ink-black/10 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {/* Hover-Overlay (nur ab sm, wo Hover existiert) */}
+              <div className="absolute inset-0 hidden flex-col justify-end bg-gradient-to-t from-ink-black/90 via-ink-black/10 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:flex">
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-neon">
                   {w.style}
                 </span>
