@@ -36,7 +36,7 @@ const ARTISTS: Artist[] = [
     specialty: "Blackwork · Dotwork",
     quote: "10 Jahre Erfahrung. Inspiriert von Geometrie & Natur.",
     portrait: U("1500648767791-00dcc994a43e", 1000),
-    work: U("1565058379802-bbe93b2f703a", 1000),
+    work: "/artists/marco-work.png",
     gallery: [
       U("1611501275019-9b5cda994e8d", 400),
       U("1598371839696-5c5bb00bdc28", 400),
@@ -50,7 +50,7 @@ const ARTISTS: Artist[] = [
     specialty: "Fine-Line · Realism",
     quote: "Feine Linien, große Wirkung. Spezialistin für Portraits.",
     portrait: U("1438761681033-6461ffad8d80", 1000),
-    work: U("1590246814883-57c511d0b7d8", 1000),
+    work: "/artists/lena-work.png",
     gallery: [
       U("1604881988758-f76ad2f7aac1", 400),
       U("1611501275019-9b5cda994e8d", 400),
