@@ -6,6 +6,7 @@ import Ablauf from "@/components/Ablauf";
 import Hygiene from "@/components/Hygiene";
 import Stimmen from "@/components/Stimmen";
 import FAQ from "@/components/FAQ";
+import Kontakt from "@/components/Kontakt";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Hygiene />
       <Stimmen />
       <FAQ />
+      <Kontakt />
     </main>
   );
 }
