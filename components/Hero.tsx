@@ -27,7 +27,12 @@ export default function Hero() {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (prefersReduced) return;
+
+    // Reduced Motion: Video pausieren, nur Poster-Standbild zeigen
+    if (prefersReduced) {
+      videoRef.current?.pause();
+      return;
+    }
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -90,8 +95,6 @@ export default function Hero() {
             setHasAudio(audible);
           }}
         >
-          {/* Echte Dateien hier einhängen: */}
-          <source src="/hero.webm" type="video/webm" />
           <source src="/hero.mp4" type="video/mp4" />
         </video>
       </div>
